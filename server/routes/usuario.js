@@ -3,7 +3,10 @@ const express = require('express');
 //es decir contraseñas que se encriptan y es imposible desencriptarlas
 const bcrypt = require('bcrypt');
 const _ = require('underscore');
-const Usuario = require('../models/usuario')
+const Usuario = require('../models/usuario');
+
+//destructuracion para traer solo la funcion que necesito
+const { verificaToken, verificaAdmin_Role } = require('../middlewares/autenticacion');
 const app = express();
 
 
@@ -12,7 +15,13 @@ const app = express();
 //                        METODO GET (OBTENER USUARIOS)
 //==================================================================================
 
-app.get('/usuario', function(req, res) {
+app.get('/usuario', verificaToken, (req, res) => {
+
+    //pruebra para darnos cuenta que todo el usuario ya viene en el req o peticion 
+    //porque el verificaToken ya me trae toda la informacion del usuario (payload)
+    // return res.json({
+    //     usuario: req.usuario
+    // })
 
     //los parametros opcionales se guardan en la peticion o req.query
     //si el parametro desde no viene ponemos por defecto 0
@@ -58,7 +67,7 @@ app.get('/usuario', function(req, res) {
 //==================================================================================
 //                        METODO POST (CREAR USUARIO)
 //==================================================================================
-app.post('/usuario', function(req, res) {
+app.post('/usuario', [verificaToken, verificaAdmin_Role], function(req, res) {
     //el body contiene toda la informacion que envia el usuario 
     let body = req.body;
 
@@ -106,7 +115,7 @@ app.post('/usuario', function(req, res) {
 //                        METODO PUT (ACTUALIZAR USUARIO)
 //==================================================================================
 
-app.put('/usuario/:id', function(req, res) {
+app.put('/usuario/:id', [verificaToken, verificaAdmin_Role], function(req, res) {
 
     let id = req.params.id;
     //el paquete pick de underscore le decimos al body que es lo que podemos actualizar los demas campos quedan intactos auque el usuario intente cambiarlos
@@ -178,7 +187,7 @@ app.put('/usuario/:id', function(req, res) {
 //                        METODO DELETE ("BORRAR" USUARIO)
 //==================================================================================
 
-app.delete('/usuario/:id', function(req, res) {
+app.delete('/usuario/:id', [verificaToken, verificaAdmin_Role], function(req, res) {
 
     let id = req.params.id;
 

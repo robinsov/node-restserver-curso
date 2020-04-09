@@ -11,8 +11,10 @@ app.use(bodyParser.urlencoded({ extended: false }))
     // parse application/json
 app.use(bodyParser.json())
 
-//con esta importacion traemos todos los metodos que estan en el usuario.js
-app.use(require('./routes/usuario'));
+//confioguracion global de las rutas
+app.use(require('./routes/index'));
+
+
 
 
 mongoose.connect(process.env.URLDB, { useNewUrlParser: true, useCreateIndex: true },
