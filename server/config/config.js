@@ -30,7 +30,7 @@ if (process.env.NODE_ENV === 'dev') {
 // 24 HORAS
 // 30 DIAS
 
-process.env.CADUCIDAD_TOKEN = 2592000;
+process.env.CADUCIDAD_TOKEN = '48h';
 
 //==============================
 // SEED O SEMILLA DE AUTENTICACION
