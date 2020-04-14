@@ -32,6 +32,34 @@ let verificaToken = (req, res, next) => {
 };
 
 //============================================
+// verificar token img por url
+//============================================
+let verificaTokenImg = ((req, res, next) => {
+    let token = req.query.token;
+
+    jwt.verify(token, process.env.SEED, (err, decoded) => {
+        if (err) {
+            return res.status(401).json({
+                ok: false,
+                err: {
+                    message: 'token no valido'
+                }
+            });
+        };
+
+        //si no existe ningun error quiere decir que el token y la semilla fueron correctas y la funcion devuelve 
+        //el payload o la informacion del usuario que este caso es el decoded
+        //con esta funcion puedo hacer que cualquier peticion tenga la informacion del usuario una vez supere el error
+        req.usuario = decoded.usuario;
+        //si no disparamos next en este middleware no va continuar con la funcion que tenemos pendiente
+        next();
+    })
+})
+
+
+
+
+//============================================
 // verificar adminRole
 //============================================
 let verificaAdmin_Role = (req, res, next) => {
@@ -53,5 +81,6 @@ let verificaAdmin_Role = (req, res, next) => {
 
 module.exports = {
     verificaToken,
-    verificaAdmin_Role
+    verificaAdmin_Role,
+    verificaTokenImg
 }

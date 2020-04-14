@@ -78,8 +78,6 @@ app.get('/productos/:id', [verificaToken], (req, res) => {
 });
 
 app.get('/productos/buscar/:termino', verificaToken, (req, res) => {
-
-
     let termino = req.params.termino
 
     //expresion regular
