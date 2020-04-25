@@ -37,9 +37,9 @@ app.get('/usuario', verificaToken, (req, res) => {
     //es segundo parametro que recibe el find es lo que quiero mostrar del usuario
     //asi puedo excluir lo que no quier ver
     Usuario.find({ estado: true }, 'nombre email role estado google img')
-        .skip(desde)
-        //limit se utiliza para paginar los resultados para que no salgan todos los registros juntos
-        .limit(limite)
+        // .skip(desde)
+        // //limit se utiliza para paginar los resultados para que no salgan todos los registros juntos
+        // .limit(limite)
         //ejecuta la peticion y devuelve los usuarios o un error en caso de suceder
         .exec((err, usuarios) => {
             if (err) {
@@ -145,59 +145,16 @@ app.put('/usuario/:id', [verificaToken, verificaAdmin_Role], function(req, res) 
 });
 
 
-//==================================================================================
+// ==================================================================================
 //                        METODO DELETE (BORRAR USUARIO)
-//==================================================================================
+// ==================================================================================
 
-// app.delete('/usuario/:id', function(req, res) {
-
-//     let id = req.params.id;
-
-//     //con el metodo findByIdAndRemove buscamos el id que envia la peticion y lo borramos fisicamente de la base de datos
-//     Usuario.findByIdAndRemove(id, (err, usuarioBorrado) => {
-//         if (err) {
-//             //estatus 4000 bad request o peticion mal ejecutada y el retunr para que termine la ejecucion
-//             return res.status(400).json({
-//                 ok: false,
-//                 err
-//             });
-//         };
-
-//         //si no existe un usuario con el id eniado en la peticion le especificamos el error al usuario
-//         if (!usuarioBorrado) {
-//             //estatus 4000 bad request o peticion mal ejecutada y el retunr para que termine la ejecucion
-//             return res.status(400).json({
-//                 ok: false,
-//                 err: {
-//                     message: 'Usuario no encontrado'
-//                 }
-//             });
-//         };
-//         res.json({
-//             ok: true,
-//             usuario: usuarioBorrado
-//         })
-//     })
-// });
-
-
-
-
-//==================================================================================
-//                        METODO DELETE ("BORRAR" USUARIO)
-//==================================================================================
-
-app.delete('/usuario/:id', [verificaToken, verificaAdmin_Role], function(req, res) {
+app.delete('/usuario/:id', [verificaToken, verificaAdmin_Role], (req, res) => {
 
     let id = req.params.id;
 
-    let cambiarEstado = {
-        estado: false
-    }
-
-
     //con el metodo findByIdAndRemove buscamos el id que envia la peticion y lo borramos fisicamente de la base de datos
-    Usuario.findByIdAndUpdate(id, cambiarEstado, { new: true }, (err, usuarioPseudoBorrado) => {
+    Usuario.findByIdAndRemove(id, (err, usuarioBorrado) => {
         if (err) {
             //estatus 4000 bad request o peticion mal ejecutada y el retunr para que termine la ejecucion
             return res.status(400).json({
@@ -207,7 +164,7 @@ app.delete('/usuario/:id', [verificaToken, verificaAdmin_Role], function(req, re
         };
 
         //si no existe un usuario con el id eniado en la peticion le especificamos el error al usuario
-        if (!usuarioPseudoBorrado) {
+        if (!usuarioBorrado) {
             //estatus 4000 bad request o peticion mal ejecutada y el retunr para que termine la ejecucion
             return res.status(400).json({
                 ok: false,
@@ -217,13 +174,57 @@ app.delete('/usuario/:id', [verificaToken, verificaAdmin_Role], function(req, re
             });
         };
 
-
         res.json({
             ok: true,
-            usuario: usuarioPseudoBorrado
+            usuarioBorrado
         })
     })
 });
+
+
+
+
+//==================================================================================
+//                        METODO DELETE ("BORRAR" USUARIO)
+//==================================================================================
+
+// app.delete('/usuario/:id', [verificaToken, verificaAdmin_Role], function(req, res) {
+
+//     let id = req.params.id;
+
+//     let cambiarEstado = {
+//         estado: false
+//     }
+
+
+//     //con el metodo findByIdAndRemove buscamos el id que envia la peticion y lo borramos fisicamente de la base de datos
+//     Usuario.findByIdAndUpdate(id, cambiarEstado, { new: true }, (err, usuarioPseudoBorrado) => {
+//         if (err) {
+//             //estatus 4000 bad request o peticion mal ejecutada y el retunr para que termine la ejecucion
+//             return res.status(400).json({
+//                 ok: false,
+//                 err
+//             });
+//         };
+
+//         //si no existe un usuario con el id eniado en la peticion le especificamos el error al usuario
+//         if (!usuarioPseudoBorrado) {
+//             //estatus 4000 bad request o peticion mal ejecutada y el retunr para que termine la ejecucion
+//             return res.status(400).json({
+//                 ok: false,
+//                 err: {
+//                     message: 'Usuario no encontrado'
+//                 }
+//             });
+//         };
+
+
+//         res.json({
+//             ok: true,
+//             usuario: usuarioPseudoBorrado
+//         })
+//     })
+// });
 
 
 
